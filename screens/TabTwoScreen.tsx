@@ -1,32 +1,131 @@
-import * as React from 'react';
-import { StyleSheet } from 'react-native';
+import BottomSheet, {
+  BottomSheetView,
+  enableLogging,
+} from "@gorhom/bottom-sheet";
+enableLogging();
+import React, { useCallback, useRef } from "react";
+import { StyleSheet, Text, View } from "react-native";
+import { useSharedValue } from "react-native-reanimated";
+import Button from "./components/Button";
 
-import EditScreenInfo from '../components/EditScreenInfo';
-import { Text, View } from '../components/Themed';
+const TabTwoScreen = () => {
+  //#region variables
+  const searchBottomSheetRef = useRef<BottomSheet>(null);
+  const resultBottomSheetRef = useRef<BottomSheet>(null);
+  const filtersBottomSheetRef = useRef<BottomSheet>(null);
 
-export default function TabTwoScreen() {
+  const searchSnapPoints = [150, 300, "100%"];
+  const resultSnapPoints = [300];
+  const filtersSnapPoints = [300];
+
+  const animatedSearchIndex = useSharedValue(0);
+  const animatedResultIndex = useSharedValue(0);
+  const animatedFiltersIndex = useSharedValue(0);
+
+  const animatedIsFiltersOpen = useSharedValue(false);
+  //#endregion
+
+  //#region callbacks
+  const handleSearchChange = useCallback((index) => {
+    if (animatedIsFiltersOpen.value) {
+      return;
+    }
+
+    if (index === 0) {
+      resultBottomSheetRef.current?.expand();
+      return;
+    }
+
+    if (index >= 1) {
+      resultBottomSheetRef.current?.close();
+      return;
+    }
+  }, []);
+  const handleResultChange = useCallback((index) => {
+    if (animatedIsFiltersOpen.value) {
+      return;
+    }
+
+    if (index === -1 && animatedSearchIndex.value < 1) {
+      searchBottomSheetRef.current?.snapToIndex(1);
+      return;
+    }
+  }, []);
+  const handleFiltersSheetAnimate = useCallback((fromIndex, toIndex) => {
+    if (toIndex === -1) {
+      resultBottomSheetRef.current?.expand();
+      searchBottomSheetRef.current?.collapse();
+      animatedIsFiltersOpen.value = false;
+    }
+  }, []);
+  const handleOpenFilterPress = useCallback(() => {
+    animatedIsFiltersOpen.value = true;
+    filtersBottomSheetRef.current?.expand();
+    resultBottomSheetRef.current?.close();
+    searchBottomSheetRef.current?.close();
+  }, []);
+  //#endregion
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Tab Two</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="/screens/TabTwoScreen.tsx" />
+      <BottomSheet
+        name="result"
+        ref={resultBottomSheetRef}
+        snapPoints={resultSnapPoints}
+        enablePanDownToClose={true}
+        animatedIndex={animatedResultIndex}
+        backgroundComponent={null}
+        handleComponent={null}
+        style={styles.resultSheetBackground}
+        onChange={handleResultChange}
+      >
+        <BottomSheetView style={styles.resultContainer}>
+          <Text>Result Sheet</Text>
+        </BottomSheetView>
+      </BottomSheet>
+      <BottomSheet
+        name="search"
+        ref={searchBottomSheetRef}
+        snapPoints={searchSnapPoints}
+        animatedIndex={animatedSearchIndex}
+        onChange={handleSearchChange}
+      >
+        <View style={styles.searchContainer}>
+          <Text>Search Sheet</Text>
+          <Button title="open filters" onPress={handleOpenFilterPress} />
+        </View>
+      </BottomSheet>
+
+      <BottomSheet
+        name="filters"
+        ref={filtersBottomSheetRef}
+        index={-1}
+        snapPoints={filtersSnapPoints}
+        onAnimate={handleFiltersSheetAnimate}
+        enablePanDownToClose={true}
+        animatedIndex={animatedFiltersIndex}
+      >
+        <View style={styles.searchContainer}>
+          <Text>Filters Sheet</Text>
+        </View>
+      </BottomSheet>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
+  searchContainer: {
+    padding: 24,
   },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
+  resultContainer: {
+    padding: 24,
+  },
+  resultSheetBackground: {
+    backgroundColor: "lightgrey",
   },
 });
+
+export default TabTwoScreen;

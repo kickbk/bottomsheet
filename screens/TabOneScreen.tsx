@@ -6,10 +6,12 @@ import BottomSheet, {
   BottomSheetModalProvider,
   BottomSheetModal,
 } from "@gorhom/bottom-sheet";
+import BottomSheetDebugView from '@gorhom/bottom-sheet/src/components/bottomSheetDebugView'
 import MapView, { Region } from "react-native-maps";
 import SearchHandle from "./components/SearchHandle";
 import Button from "./components/Button";
 import { useStore } from "./store";
+import { useSharedValue } from "react-native-reanimated";
 
 const TabOneScreen = () => {
   // refs
@@ -23,6 +25,9 @@ const TabOneScreen = () => {
   const searchModalCurrentIndex = useRef(0);
 
   // variables
+  const searchAnimatedIndex = useSharedValue(0);
+  const filtersAnimatedIndex = useSharedValue(0);
+  const resultAnimatedIndex = useSharedValue(0);
   const snapPoints = useMemo(() => [60, 300, "100%"], []);
   const resultsCarouselSnapPoints = useMemo(() => [0, 300], []);
   const filtersModalSnapPoints = useMemo(() => [300], []);
@@ -235,12 +240,14 @@ const TabOneScreen = () => {
           index={-1}
           enablePanDownToClose
           handleComponent={null}
+          animatedIndex={resultAnimatedIndex}
           backgroundComponent={null}
           onChange={handleResultSheetChange}
           children={renderResultsCarousel}
         />
         <BottomSheet
           ref={searchSheetRef}
+          animatedIndex={searchAnimatedIndex}
           key="search-sheet"
           snapPoints={snapPoints}
           keyboardBehavior="interactive"
@@ -254,12 +261,19 @@ const TabOneScreen = () => {
         </BottomSheet>
         <BottomSheetModal
           ref={filtersModalRef}
+          animatedIndex={filtersAnimatedIndex}
           key="filters-sheet-modal"
           snapPoints={filtersModalSnapPoints}
           handleComponent={null}
           onChange={handleFiltersChange}
           children={renderFilters}
         />
+
+        <BottomSheetDebugView values={{
+          resultAnimatedIndex,
+          searchAnimatedIndex,
+          filtersAnimatedIndex
+        }} />
       </View>
     </BottomSheetModalProvider>
   );

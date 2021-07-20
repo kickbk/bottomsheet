@@ -1434,10 +1434,10 @@
     lodash.pick "^4.4.0"
     lodash.template "^4.5.0"
 
-"@gorhom/bottom-sheet@4.0.0-alpha.21":
-  version "4.0.0-alpha.21"
-  resolved "https://registry.yarnpkg.com/@gorhom/bottom-sheet/-/bottom-sheet-4.0.0-alpha.21.tgz#0ce72d5e1de54e4a8bce9503a5d7088c5f9228bd"
-  integrity sha512-/yG9zUmZ0si7XXBE+pb42oMxqb8/c4NdzCZATZm5kcRYeFIuIzXO3Qq/1+e/sfoovDTPl0KLfkiuk2XH8vPXvA==
+"@gorhom/bottom-sheet@4.0.0-alpha.22":
+  version "4.0.0-alpha.22"
+  resolved "https://registry.yarnpkg.com/@gorhom/bottom-sheet/-/bottom-sheet-4.0.0-alpha.22.tgz#6ebc1846ee003435c4049c47ba89b93ed4276f6a"
+  integrity sha512-1NDhgLJy9vBrp+lmUETMgh6fMJBnq2GEUuSbBLG2Q42uJa2lTOX7VkQADffl+BeV6ji2T7DVdCrettN+Tt6Y9g==
   dependencies:
     "@gorhom/portal" "^1.0.7"
     invariant "^2.2.4"

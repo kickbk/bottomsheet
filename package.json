@@ -33,7 +33,7 @@
     "react-native-safe-area-context": "3.2.0",
     "react-native-screens": "~3.4.0",
     "react-native-web": "~0.13.12",
-    "@gorhom/bottom-sheet": "4.0.0-alpha.21",
+    "@gorhom/bottom-sheet": "4.0.0-alpha.22",
     "@motify/skeleton": "^0.11.0",
     "react-native-maps": "0.28.0",
     "zustand": "^3.5.2"
